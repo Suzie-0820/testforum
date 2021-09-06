@@ -1,0 +1,82 @@
+﻿@page "{postId}"
+@model testholger.Pages.PostPageModel
+
+@{
+    ViewData["Title"] = "PostPage";
+}
+
+
+<hr />
+<div class="container p-3">
+    <div class="row">
+        <h1>@Model.MainPost.Title</h1>
+    </div>
+    <div class="row border-bottom">
+        <p class="col-6">by @Model.MainPost.Author, posted @Model.MainPost.CreatedAt</p>
+    </div>
+    <div class="row border-bottom">
+        <h4 class="col-6">@Model.MainPost.OriginalPost</h4>
+    </div>
+</div>
+
+    <!--Skriver ut alla svar, med den nyaste först-->
+  <div class="container p-3">
+    @if (Model.Replies.Count != 0)
+    {
+            for(int i = Model.Replies.Count -1; i>=0; i--)
+        {
+      <div class="row border">
+          <div class="col-2">
+              <h6>Reply by: @Model.Replies[i].Author</h6>
+              <p>posted @Model.Replies[i].CreatedAt</p>
+          </div>
+          <p class="col-8">@Model.Replies[i].Comment</p>
+          <div class="col-2">
+              <form method="post" asp-page-handler="like" class="row">
+                  <!--En hjärt ikon för att kunna Like, och en p bredvid som visar hur många likes den Post har-->
+                  <div class="form-group">
+                      <input type="hidden" name="CommentId" value="@Model.Replies[i].PostsId" />
+                      <button type="submit" class="btn btn-light" value="like">
+                          <i class="bi bi-heart"></i>
+                      </button>
+                  </div> 
+                  <p>@Model.Replies[i].PostLikes</p>
+              </form>
+              @if (Model.Replies[i].Author == Model.Username) //Om den inloggade användare är den som skrev kommentaren, visas en trash-icon för att radera, annars visas den inte.
+              {
+                  <form method="post" asp-page-handler="delete" class="row">
+                      <div class="form-group">
+                          <input type="hidden" name="CommentId" value="@Model.Replies[i].PostsId" />
+                          <button type="submit" class="btn btn-light" value="delete">
+                              <i class="bi bi-trash"></i>
+                          </button>
+                      </div>
+                  </form>
+
+              }
+          </div>
+      </div>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-page-handler="create">
+            <div class="form-group">
+                <label for="comment">My comment:</label>
+                <input type="text" class="form-control" id="username" placeholder="Comment" asp-for="Posts.Comment">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Reply" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="ForumStartPage">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

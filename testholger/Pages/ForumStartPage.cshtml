@@ -1,0 +1,57 @@
+﻿@page
+@model testholger.Pages.ForumStartPageModel
+
+@{
+    ViewData["Title"] = "ForumStartPage";
+}
+
+<h1>Welcome</h1>
+
+<h4>Topics</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-page-handler="create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <table class="table"> <!--Tabel som visar de inlägg som finns i forumet-->
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Topic</th>
+                <th scope="col">Created By</th>
+                <th scope="col">Comments</th>
+                <th scope="col">Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Med en foreach loop, skapar en ny rad för varje inlägg som finns och visar upp tillhörande info, med nyaste först-->
+            @for (int i = Model.ForumTopics.Count - 1; i >= 0; i--)
+            {
+                <tr>
+                    <!-- en knapp för att läsa som skickar användaren till den PostPage sida, och skickar in den specifiska topics ID med i HTML adressfältet då det ej är känslig info-->
+                    <th scope="row"><a asp-page="./PostPage" asp-route-postID="@Model.ForumTopics[i].TopicsId"><input type="submit" value="Read" class="btn btn-primary" /></a></th>
+                    <th> @Model.ForumTopics[i].Title</th>
+                    <td>@Model.ForumTopics[i].Author</td>
+                    <td>@Model.ForumTopics[i].NumberComments</td>
+                    <td>@Model.ForumTopics[i].TopicSubject</td>
+                </tr>
+            }
+        </tbody>
+
+</table>
+</div>
+
+<div>
+    <a asp-page="Index">Till hemsidan</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

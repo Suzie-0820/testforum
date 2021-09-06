@@ -1,0 +1,57 @@
+﻿@page
+@model testholger.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container p-5 justify-content-md-center">
+    <div class="row">
+        <h1 class="text-center mb-5">Welcome to Suzie's forum</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-4 p-3 mr-5">
+            <h4>Please log in with username and password</h4>
+<!--Den form vid submit ska anropa den post method Login, skickar in data via asp-for-->
+            <form method="post" asp-page-handler="login">
+                <div class="form-group">
+                    <label for="username">Användarnamn</label>
+                    <input type="text" class="form-control" id="username" placeholder="MyUsername" asp-for="Users.Username">
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Lösenord</label>
+                    <input type="password" class="form-control" id="userPassword" placeholder="123456" asp-for="Users.Password">
+                    <small id="passwordHelp" class="form-text text-muted">Case sensitive</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Logga in</button>
+                <p class="text-danger">@Model.ErrorMessage</p>
+            </form>
+        </div>
+        <div class="col-6 p-3">
+            <h4>Ingen konto? Skapa ny!</h4>
+<!--Den form vid submit ska anropa den post method Create, genom att skapa en ny användare i databasen, skickar in data via asp-for. Är medveten att det inte finns något som förhindrar
+    användarne att skicka in en tom formulär som skapar en tom konto i databasen, kunde ha implementerat tex [required]-->
+            <form method="post" asp-page-handler="create">
+                <div class="form-group">
+                    <label for="newUsername">Välj din användarnamn</label>
+                    <input type="text" class="form-control" id="newUsername" placeholder="MyUsername" asp-for="Users.Username">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Välj ditt lösenord</label>
+                    <input type="password" class="form-control" id="newPassword" placeholder="123456" asp-for="Users.Password">
+                    <small id="passwordHelp" class="form-text text-muted">Case sensitive</small>
+                </div>
+                <div class="form-group">
+                    <label for="userFirstName">Förnamn</label>
+                    <input type="text" class="form-control" id="userFirstName" placeholder="Sven" asp-for="Users.FirstName">
+                </div>
+                <div class="form-group">
+                    <label for="userFamilyName">Efternamn</label>
+                    <input type="text" class="form-control" id="userFamilyName" placeholder="Svensson" asp-for="Users.LastName">
+                </div>
+                <button type="submit" class="btn btn-primary">Skapa konto</button>
+                <p class="text-danger">@Model.SuccessMessage</p>
+            </form>
+        </div>
+    </div>
+
+</div>
